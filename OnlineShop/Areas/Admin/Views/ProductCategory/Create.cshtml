@@ -1,0 +1,69 @@
+﻿@model Model.EF.ProductCategory
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+}
+@section jsFooter{
+    <script src="~/assets/admin/js/common/productCategories/createProductCategory.js"></script>
+    }
+<h2>Tạo mới danh mục</h2>
+<div ng-app="shop.product" ng-controller="createProductCategory">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @*@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                <label class="control-label col-md-2">Tên danh mục</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Biệt danh</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.MetaTitle, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.MetaTitle, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!--danh mục gốc-->
+            <div class="form-group">
+                <label class="control-label col-md-2">Danh mục cha</label>
+                <div class="col-md-10">
+                    <select class="form-control" ng-model="productCategory.ParentID" ng-options="option.ID as option.Name for option in flatFolders">
+                        <option value="">Danh mục gốc</option>
+                    </select>
+					
+                    <input name="ParentID" type="hidden" ng-model="productCategory.ParentID"/>
+                    <!--cho phép null no validation-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Trạng thái</label>
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(model => model.Status)
+                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Hiển thị trang chủ</label>
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(model => model.ShowOnHome)
+                    @Html.ValidationMessageFor(model => model.ShowOnHome, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>

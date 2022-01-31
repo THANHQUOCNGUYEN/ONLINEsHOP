@@ -1,0 +1,36 @@
+﻿@using Model.EF
+@model List<string>
+@{
+    ViewBag.Title = "LoadMoreImages";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+}
+@section jsFooter{
+    <script src="~/assets/admin/js/common/serviceCommon.js"></script>
+}
+@section header{
+    <strong>Chi tiết sản phẩm</strong>
+}
+<div ng-app="OnlineShop" ng-controller="ProductController">
+
+    <h2>Danh sách các hình ảnh thu nhỏ của sản phẩm</h2>
+    @if (Model.Count() != 0)
+    {
+        <ul style="list-style-type:none;display:flex">
+            @foreach (var item in Model)
+            {
+                <li><img src="@item" width="100" /></li>
+            }
+        </ul>
+    }
+    else
+    { 
+        <strong>Sản phẩm này không có hình ảnh thu nhỏ</strong>
+    }
+
+
+
+    <!-- cách 2 : chuyển sang dạng listString-->
+
+
+</div>
+

@@ -1,0 +1,161 @@
+﻿@model Model.EF.Product
+
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+}
+
+<h2 style="text-align:center">Cập nhật danh sách sản phẩm</h2>
+@section jsFooter{
+    <script src="~/assets/admin/js/common/updateControllerService.js"></script>
+    <script src="~/assets/admin/js/controller/productController.js"></script>
+    }
+<div ng-app="shop.product" ng-controller="updateController">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="form-group">
+           <label class="control-label col-md-2">Tên sản phẩm</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Mã đặt hàng</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Biệt danh</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MetaTitle, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MetaTitle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Mô tả</label>
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Description,new { @class = "form-control",@style="height:200px" })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">ảnh gốc</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Image)
+                <a href="#" id="btnSelectedImage">Choose</a>
+
+                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!--hình ảnh thu nhỏ-->
+        <div class="form-group">
+            <label class="control-label col-md-2">ảnh thu nhỏ</label>
+            <div class="col-md-10">
+                <ul class="list-inline">
+                    <!--track by $index-->
+                    <li ng-repeat="img in MoreImages track by $index"><img ng-src="{{img}}" width="100" /></li>
+                </ul>
+                <input name="MoreImages" type="hidden" value="{{MoreImages}}">
+                <button type="button" class="btn btn-primary" ng-click="ChooseMoreImage()">Choose MoreImages</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Giá bán</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Giá khuyễn mãi</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PromotionPrice, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PromotionPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Số lượng</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!--load danh muc dang tim-kiem-->
+        <div class="form-group">
+            <label class="control-label col-md-2">Danh mục</label>
+            <div class="col-md-10">
+                <ui-select name="CategoryID" ng-model="Product.CategoryID" theme="bootstrap" style="min-width: 300px;" title="chọn danh mục">
+                    <ui-select-match placeholder="Vui lòng chọn danh mục">{{$select.selected.Name}}</ui-select-match>
+                    <ui-select-choices repeat="item.ID as item in getParent | filter: $select.search">
+                        <div ng-bind-html="item.Name | highlight: $select.search"></div>
+                        <small>
+                            Tên danh mục: {{item.Name}} -
+                            Alias:{{item.MetaTitle}}
+                        </small>
+                    </ui-select-choices>
+                </ui-select>
+                <input type="hidden" name="CategoryID" value="{{Product.CategoryID}}" />
+                @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Chi tiết</label>
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Detail,new {@id= "txtDetail" ,@class = "form-control" ,@style="height:200px"})
+                @Html.ValidationMessageFor(model => model.Detail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Bảo hành</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Warranty, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Warranty, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                    @Html.CheckBoxFor(model => model.Status)
+                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Sản phẩm HOT</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TopHot, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TopHot, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    }
+</div>
